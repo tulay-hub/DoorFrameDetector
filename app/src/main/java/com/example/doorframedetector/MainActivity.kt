@@ -53,20 +53,25 @@ class MainActivity : AppCompatActivity(), Scene.OnUpdateListener, VisionProcesso
         setContentView(R.layout.activity_main)
         
         // Initialize views
-        arSceneView = findViewById(R.id.ar_scene_view)
-        groundStatusText = findViewById(R.id.ground_status)
-        doorframeStatusText = findViewById(R.id.doorframe_status)
-        instructionText = findViewById(R.id.instruction_text)
-        
-        // Initialize components
-        // cameraController = CameraController(this) // Conflict with ARSceneView
-        visionProcessor = VisionProcessor(this, this)
-        
-        // Check camera permission
-        if (!hasCameraPermission()) {
-            requestCameraPermission()
-        } else {
-            setupAR()
+        try {
+            arSceneView = findViewById(R.id.ar_scene_view)
+            groundStatusText = findViewById(R.id.ground_status)
+            doorframeStatusText = findViewById(R.id.doorframe_status)
+            instructionText = findViewById(R.id.instruction_text)
+            
+            // Initialize components
+            // cameraController = CameraController(this) // Conflict with ARSceneView
+            visionProcessor = VisionProcessor(this, this)
+            
+            // Check camera permission
+            if (!hasCameraPermission()) {
+                requestCameraPermission()
+            } else {
+                // Check for ARCore availability before setup
+                checkARCoreAvailability()
+            }
+        } catch (e: Exception) {
+             Toast.makeText(this, "应用初始化失败: ${e.message}", Toast.LENGTH_LONG).show()
         }
     }
     
@@ -342,22 +347,6 @@ class MainActivity : AppCompatActivity(), Scene.OnUpdateListener, VisionProcesso
                 doorFrameNode.renderable = doorFrameModel
                 doorFrameMarkerNode = doorFrameNode
                 
-                // Also add a text label
-                instructionText.postDelayed({
-                    runOnUiThread {
-                        instructionText.text = "门框已标记完成！"
-                    }
-                }, 500)
-            }
-    }
-    
-    private fun removeDoorFrameMarker() {
-        doorframeMarkerNode?.let { node ->
-            node.setParent(null)
-            doorframeMarkerNode = null
-        }
-    }
-}               
                 // Also add a text label
                 instructionText.postDelayed({
                     runOnUiThread {

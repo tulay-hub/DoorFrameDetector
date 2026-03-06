@@ -1,5 +1,4 @@
 # 🚪 Door Frame Detector
-  设备需要支持 ARCore
 
 Android app for real-time door frame detection using AR and machine learning.
 
