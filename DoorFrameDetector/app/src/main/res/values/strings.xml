@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Door Frame Detector</string>
+    <string name="scan_for_ground">正在扫描地面...</string>
+    <string name="ground_detected">地面已检测！</string>
+    <string name="doorframe_detected">检测到门框！</string>
+    <string name="no_doorframe">未检测到门框</string>
+    <string name="instruction">请缓慢移动手机扫描房间</string>
+</resources>
