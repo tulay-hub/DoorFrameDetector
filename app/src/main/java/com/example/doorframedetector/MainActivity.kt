@@ -112,34 +112,11 @@ class MainActivity : AppCompatActivity(), Scene.OnUpdateListener, VisionProcesso
     
     private fun setupAR() {
         // Configure AR Scene
-        // arSceneView.scene.addOnUpdateListener(this@MainActivity) // Move to resume to avoid early access
-        
-        /*
-        coroutineScope.launch {
-            // Initialize camera for real-time processing
-            val cameraInitialized = withContext(Dispatchers.IO) {
-                cameraController.initializeCamera()
-            }
-            
-            if (cameraInitialized) {
-                // Start camera feed for vision processing
-                cameraController.startCamera(analysisExecutor) { image ->
-                    processCameraFrame(image)
-                }
-                
-                runOnUiThread {
-                    instructionText.text = "正在启动摄像头检测..."
-                }
-            } else {
-                runOnUiThread {
-                    instructionText.text = "摄像头初始化失败，使用AR检测模式"
-                }
-            }
+        try {
+            arSceneView.scene.addOnUpdateListener(this@MainActivity)
+        } catch (e: Exception) {
+            Toast.makeText(this, "AR 初始化失败: ${e.message}", Toast.LENGTH_LONG).show()
         }
-        */
-        
-        // Use ARCore frame for processing instead of CameraX
-        arSceneView.scene.addOnUpdateListener(this@MainActivity)
     }
     
     private fun processCameraFrame(image: ImageProxy) {
