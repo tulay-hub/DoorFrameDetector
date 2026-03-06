@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    
+    <!-- Door frame icon -->
+    <group>
+        <path
+            android:fillColor="#FFFFFF"
+            android:pathData="M32,20L76,20L76,88L32,88Z"
+            android:strokeColor="#000000"
+            android:strokeWidth="2"/>
+        <path
+            android:fillColor="#4CAF50"
+            android:pathData="M40,28L68,28L68,56L40,56Z"/>
+        <path
+            android:fillColor="#FF9800"
+            android:pathData="M40,60L68,60L68,80L40,80Z"/>
+    </group>
+    
+    <!-- AR Camera overlay -->
+    <group android:translateX="54" android:translateY="54">
+        <path
+            android:pathData="M-20,-10C-10,-20 10,-20 20,-10L20,10C10,20 -10,20 -20,10Z"
+            android:fillColor="#00000000"
+            android:strokeColor="#FFFFFF"
+            android:strokeWidth="3"/>
+        <circle
+            android:cx="0"
+            android:cy="0"
+            android:r="5"
+            android:fillColor="#FF0000"/>
+    </group>
+</vector>
