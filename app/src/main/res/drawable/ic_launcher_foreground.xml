@@ -28,10 +28,8 @@
             android:fillColor="#00000000"
             android:strokeColor="#FFFFFF"
             android:strokeWidth="3"/>
-        <circle
-            android:cx="0"
-            android:cy="0"
-            android:r="5"
+        <path
+            android:pathData="M-5,0 A5,5 0 1,1 5,0 A5,5 0 1,1 -5,0"
             android:fillColor="#FF0000"/>
     </group>
 </vector>
