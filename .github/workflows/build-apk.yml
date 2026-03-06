@@ -15,26 +15,55 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
       
-    - name: Set up JDK 17
+    - name: Setup Java
       uses: actions/setup-java@v4
       with:
-        java-version: '17'
         distribution: 'temurin'
+        java-version: '17'
         
     - name: Setup Android SDK
       uses: android-actions/setup-android@v3
-        
-    - name: Setup Gradle
-      uses: gradle/gradle-build-action@v2
       with:
-        gradle-version: '8.7'
+        packages: |
+          platform-tools
+          platforms;android-34
+          build-tools;34.0.0
         
-    - name: Build with Gradle
-      run: gradle assembleRelease
+    - name: Download and setup Gradle
+      run: |
+        wget https://services.gradle.org/distributions/gradle-8.7-bin.zip
+        unzip -q gradle-8.7-bin.zip
+        echo "GRADLE_HOME=$PWD/gradle-8.7" >> $GITHUB_ENV
+        echo "$PWD/gradle-8.7/bin" >> $GITHUB_PATH
         
-    - name: Upload APK
+    - name: Verify setup
+      run: |
+        java -version
+        which gradle || echo "gradle command not found"
+        ls -la $GRADLE_HOME/bin/gradle || echo "gradle binary not found"
+        
+    - name: Clean gradle cache if exists
+      run: |
+        rm -rf .gradle || true
+        
+    - name: Build APK with absolute path
+      run: |
+        $GRADLE_HOME/bin/gradle assembleRelease --stacktrace
+        
+    - name: List generated APKs
+      run: find app/build/outputs/apk -name "*.apk" -type f
+        
+    - name: Upload Release APK
+      if: success()
       uses: actions/upload-artifact@v4
       with:
         name: door-frame-detector-apk
         path: app/build/outputs/apk/release/app-release.apk
         if-no-files-found: error
+        
+    - name: Upload Debug APK as backup
+      if: always()
+      uses: actions/upload-artifact@v4  
+      with:
+        name: door-frame-detector-debug-apk
+        path: app/build/outputs/apk/debug/app-debug.apk
