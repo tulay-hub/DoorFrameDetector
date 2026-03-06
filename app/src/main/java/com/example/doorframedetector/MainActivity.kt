@@ -10,8 +10,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.ImageProxy
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.google.ar.core.ArCoreApk
+import android.os.Handler
+import android.os.Looper
 import com.google.ar.core.Anchor
-import com.google.ar.core.HitResult
 import com.google.ar.core.Plane
 import com.google.ar.core.TrackingState
 import com.google.ar.sceneform.AnchorNode
@@ -340,6 +342,22 @@ class MainActivity : AppCompatActivity(), Scene.OnUpdateListener, VisionProcesso
                 doorFrameNode.renderable = doorFrameModel
                 doorFrameMarkerNode = doorFrameNode
                 
+                // Also add a text label
+                instructionText.postDelayed({
+                    runOnUiThread {
+                        instructionText.text = "门框已标记完成！"
+                    }
+                }, 500)
+            }
+    }
+    
+    private fun removeDoorFrameMarker() {
+        doorframeMarkerNode?.let { node ->
+            node.setParent(null)
+            doorframeMarkerNode = null
+        }
+    }
+}               
                 // Also add a text label
                 instructionText.postDelayed({
                     runOnUiThread {
