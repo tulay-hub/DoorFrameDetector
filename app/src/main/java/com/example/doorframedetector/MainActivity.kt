@@ -57,7 +57,7 @@ class MainActivity : AppCompatActivity(), Scene.OnUpdateListener, VisionProcesso
         instructionText = findViewById(R.id.instruction_text)
         
         // Initialize components
-        cameraController = CameraController(this)
+        // cameraController = CameraController(this) // Conflict with ARSceneView
         visionProcessor = VisionProcessor(this, this)
         
         // Check camera permission
@@ -104,10 +104,11 @@ class MainActivity : AppCompatActivity(), Scene.OnUpdateListener, VisionProcesso
     }
     
     private fun setupAR() {
+        // Configure AR Scene
+        // arSceneView.scene.addOnUpdateListener(this@MainActivity) // Move to resume to avoid early access
+        
+        /*
         coroutineScope.launch {
-            // Configure AR Scene
-            arSceneView.scene.addOnUpdateListener(this@MainActivity)
-            
             // Initialize camera for real-time processing
             val cameraInitialized = withContext(Dispatchers.IO) {
                 cameraController.initializeCamera()
@@ -128,6 +129,10 @@ class MainActivity : AppCompatActivity(), Scene.OnUpdateListener, VisionProcesso
                 }
             }
         }
+        */
+        
+        // Use ARCore frame for processing instead of CameraX
+        arSceneView.scene.addOnUpdateListener(this@MainActivity)
     }
     
     private fun processCameraFrame(image: ImageProxy) {
@@ -185,6 +190,19 @@ class MainActivity : AppCompatActivity(), Scene.OnUpdateListener, VisionProcesso
         // Real-time processing for ground and door frame detection
         val frame = arSceneView.arFrame ?: return
         
+        // Process frame for ML Kit if needed
+        try {
+            val image = frame.acquireCameraImage()
+            if (image != null) {
+                 // Convert to InputImage and process
+                 // visionProcessor.processImage(image, ...)
+                 // For now, we just release it to avoid memory leaks
+                 image.close()
+            }
+        } catch (e: Exception) {
+            // Ignore frame acquisition errors
+        }
+
         // Check for detected planes (ground)
         val updatedPlanes = frame.getUpdatedTrackables(Plane::class.java)
         for (plane in updatedPlanes) {
@@ -240,7 +258,7 @@ class MainActivity : AppCompatActivity(), Scene.OnUpdateListener, VisionProcesso
         // Clean up resources
         coroutineScope.cancel()
         analysisExecutor.shutdown()
-        cameraController.release()
+        // cameraController.release()
         visionProcessor.stop()
         arSceneView.destroy()
     }
